@@ -1,0 +1,22 @@
+FROM ubuntu:18.04
+
+RUN apt-get update && \
+    apt-get install libhdf5-serial-dev hdf5-tools libhdf5-dev zlib1g-dev zip libjpeg8-dev liblapack-dev libblas-dev gfortran -y && \
+    apt-get install python3.6 -y && \
+    apt-get install -y python3-pip && \
+    apt-get install python3-h5py -y && \
+    pip3 install --upgrade pip && \
+    pip3 install -U pip testresources setuptools && \
+    pip3 install -U numpy==1.18.2 keras_preprocessing==1.1.0 keras_applications==1.0.8 gast==0.2.2 protobuf && \
+    apt-get install wget -y && \
+    wget https://developer.download.nvidia.com/compute/redist/jp/v43/tensorflow-gpu/tensorflow_gpu-2.0.0+nv19.12-cp36-cp36m-linux_aarch64.whl && \
+    pip3 install tensorflow_gpu-2.0.0+nv19.12-cp36-cp36m-linux_aarch64.whl && \
+    rm tensorflow_gpu-2.0.0+nv19.12-cp36-cp36m-linux_aarch64.whl && \
+    export PYTHONPATH="/usr/lib/python3.6/dist-packages"
+
+RUN pip3 install pillow
+
+COPY /.bashrc /root/.bashrc
+RUN /bin/bash -c "source /root/.bashrc"
+COPY /outputs/. /home/aml_workdir/outputs/
+COPY /score.py /home/aml_workdir/score.py
